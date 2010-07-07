@@ -21,8 +21,8 @@ class HierarchicalManagerFactory
         $reflClass = $meta->reflClass;
         if ($reflClass->implementsInterface('DoctrineExtensions\Hierarchical\MaterializedPath\MaterializedPathNodeInfo')) {
             return new MaterializedPathManager($em, $meta);
-        } elseif ($reflClass->implementsInterface('NestedSetNodeInfo')) {
-            return new NestedSetHierarchicalManager($em, $meta);
+        } elseif ($reflClass->implementsInterface('DoctrineExtensions\Hierarchical\NestedSet\NestedSetNodeInfo')) {
+            return new NestedSetManager($em, $meta);
         }
 
         throw new HierarchicalException('Named entity does not implement any known Node interface');

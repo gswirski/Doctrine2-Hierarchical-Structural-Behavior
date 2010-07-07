@@ -38,11 +38,4 @@ interface NestedSetNodeInfo
      * @return string
      */
     public function getRootIdFieldName();
-
-    /**
-     * Retrieves the Entity parent_id field name
-     *
-     * @return string
-     */
-    public function getParentIdFieldName();
 }
