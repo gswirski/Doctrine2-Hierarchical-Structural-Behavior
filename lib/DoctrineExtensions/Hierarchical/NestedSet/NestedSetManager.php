@@ -3,7 +3,7 @@
 namespace DoctrineExtensions\Hierarchical\NestedSet;
 
 use DoctrineExtensions\Hierarchical\AbstractManager,
-    DoctrineExtensions\Hierarchical\Node,
+    DoctrineExtensions\Hierarchical\NodeInterface,
     DoctrineExtensions\Hierarchical\NestedSet\NestedSetNodeInfo,
     DoctrineExtensions\Hierarchical\NestedSet\NestedSetNodeDecorator;
 
@@ -17,7 +17,7 @@ class NestedSetManager extends AbstractManager implements NestedSetNodeInfo
      */
     public function getNode($entity)
     {
-        if ($entity instanceof Node) {
+        if ($entity instanceof NodeInterface) {
             if ($entity instanceof NestedSetNodeDecorator) {
                 return $entity;
             } else {

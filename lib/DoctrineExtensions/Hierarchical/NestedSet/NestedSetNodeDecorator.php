@@ -3,7 +3,7 @@
 namespace DoctrineExtensions\Hierarchical\NestedSet;
 
 use DoctrineExtensions\Hierarchical\AbstractDecorator,
-    DoctrineExtensions\Hierarchical\Node,
+    DoctrineExtensions\Hierarchical\NodeInterface,
     DoctrineExtensions\Hierarchical\HierarchicalException,
     Doctrine\ORM\NoResultException;
 
@@ -27,7 +27,7 @@ use DoctrineExtensions\Hierarchical\AbstractDecorator,
  * TODO getIdFieldName and others should be cached imo, and lazy-loaded
  *      by _getBaseQueryBuilder if they are not filled in
  */
-class NestedSetNodeDecorator extends AbstractDecorator implements Node
+class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
 {
     protected $children;
 
