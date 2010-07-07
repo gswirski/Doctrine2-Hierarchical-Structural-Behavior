@@ -21,10 +21,10 @@ class NestedSetManager extends AbstractManager implements NestedSetNodeInfo
             if ($entity instanceof NestedSetNodeDecorator) {
                 return $entity;
             } else {
-                throw new \InvalidArgumentException('Provided node is not of type MaterializedPathNodeDecorator');
+                throw new \InvalidArgumentException('Provided node is not of type NestedSetNodeInfo');
             }
         } elseif (! $entity instanceof NestedSetNodeInfo) {
-                throw new \InvalidArgumentException('Provided entity is not of type MaterializedPathNodeInfo');
+                throw new \InvalidArgumentException('Provided entity is not of type NestedSetNodeInfo');
         }
 
         return new NestedSetNodeDecorator($entity, $this);
