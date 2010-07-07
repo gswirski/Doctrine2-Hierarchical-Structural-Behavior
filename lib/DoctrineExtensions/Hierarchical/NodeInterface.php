@@ -20,20 +20,22 @@ interface NodeInterface
     public function getNextSibling();
     public function isSiblingOf($entity);
 
+    public function hasChildren();
     public function getChildren();
     public function getFirstChild();
     public function getLastChild();
-    public function isChildOf($entity);
     public function getNumberOfChildren();
-    public function hasChildren();
+    public function isChildOf($entity);
 
+    public function hasDescendants();
     public function getDescendants();
     public function getNumberOfDescendants();
     public function isDescendantOf($entity);
 
-    public function getAncestors();
-    public function getParent();
     public function hasParent();
+    public function getParent();
+    public function hasAncestors();
+    public function getAncestors();
 
     public function insertAsChildOf($entity, $pos = null);
     public function insertAsLastChildOf($entity);
@@ -46,4 +48,6 @@ interface NodeInterface
     public function moveAsLastChildOf($entity);
     public function moveAsNextSiblingOf($entity);
     public function moveAsPrevSiblingOf($entity);
+    
+    public function delete();
 }

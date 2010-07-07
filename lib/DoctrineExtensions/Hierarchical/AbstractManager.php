@@ -105,5 +105,32 @@ abstract class AbstractManager
      * @param mixed $entity
      * @return DoctrineExtensions\Hierarchical\Node
      */
-    abstract public function addRoot($entity);
+    abstract public function createRoot($entity);
+    
+    /**
+     * Gets root node by id or default one if not specified
+     *
+     * @param mixed $id
+     * @return DoctrineExtensions\Hierarchical\Node
+     */
+    abstract public function getRoot($id = null);
+    
+    /**
+     * Gets all root nodes
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    abstract public function getRoots();
+    
+    /**
+     * Deletes tree by root id or default one if not specified
+     *
+     * @param mixed $root
+     */
+    abstract public function deleteTree($root = null);
+    
+    /**
+     * Deletes all trees
+     */
+    abstract public function deleteTrees();
 }
