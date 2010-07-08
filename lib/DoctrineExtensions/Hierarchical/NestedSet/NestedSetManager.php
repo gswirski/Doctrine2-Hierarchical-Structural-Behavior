@@ -31,27 +31,27 @@ class NestedSetManager extends AbstractManager implements NestedSetNodeInfo
     }
 
     /**
-     * Adds the entity as a root node
+     * Creates root node from given entity
      *
-     * Decorates via getNode() as needed
-     *
-     * @param mixed $entity
-     * @return DoctrineExtensions\Hierarchical\Node
+     * @param object $entity        instance of Doctrine_Record
      */
-    public function addRoot($entity)
+    public function createRoot(NestedSetNodeInfo $entity)
     {
         $node = $this->getNode($entity);
-        $entity = $node->unwrap();
-        if ($node->getId()) {
-            throw new HierarchicalException('This entity is already initialized and can not be made a root node');
-        }
-
+        
         $this->em->getConnection()->beginTransaction();
         try {
             $node->setValue($this->getLeftFieldName(), 1);
             $node->setValue($this->getRightFieldName(), 2);
             $node->setValue($this->getLevelFieldName(), 0);
-            $node->setValue($this->getRootIdFieldName(), 1);
+            
+            if ( ! $node->getValue($this->getRootIdFieldName())) {
+                if ( ! $node->getId()) {
+                    throw new HierarchicalException('You cannot use default root id for non persisted entity');
+                }
+                
+                $node->setValue($this->getRootIdFieldName(), $node->getId());
+            }
             
             $this->em->persist($entity);
             $this->em->flush();
@@ -61,9 +61,49 @@ class NestedSetManager extends AbstractManager implements NestedSetNodeInfo
             $this->em->close();
             throw $e;
         }
+        
         return $node;
     }
+
+    /**
+     * Gets root node by id or default one if not specified
+     *
+     * @param mixed $id
+     * @return DoctrineExtensions\Hierarchical\Node
+     */
+    public function getRoot($id = null)
+    {
+        
+    }
     
+    /**
+     * Gets all root nodes
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getRoots()
+    {
+        
+    }
+    
+    /**
+     * Deletes tree by root id or default one if not specified
+     *
+     * @param mixed $root
+     */
+    public function deleteTree($root = null)
+    {
+        
+    }
+    
+    /**
+     * Deletes all trees
+     */
+    public function deleteTrees()
+    {
+        
+    }
+
     /**
      * BEGIN NestedSetNodeInfo Implementation
      **/
