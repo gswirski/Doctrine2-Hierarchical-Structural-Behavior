@@ -26,6 +26,8 @@ abstract class AbstractManager
      **/
     protected $prototype;
 
+    protected $queryFactory;
+    
     /**
      * __construct
      *
@@ -63,6 +65,7 @@ abstract class AbstractManager
     /**
      * Decorates a collection of entities as Nodes
      *
+     * @todo I think this shoud build correct tree, not only wrap everything into decorator
      * @param Traversable|array $input
      * @return Traversable|array
      */
@@ -87,6 +90,16 @@ abstract class AbstractManager
             'Input to getNodes should be a PersistentCollection or a ' .
             'Traversable/array, ' . gettype($input) . ' provided.'
         );
+    }
+
+    /**
+     * Returns the QueryBuilder factory
+     *
+     * @return AbstractQueryFactory
+     **/
+    public function getQueryFactory()
+    {
+        return $this->queryFactory;
     }
 
     /**

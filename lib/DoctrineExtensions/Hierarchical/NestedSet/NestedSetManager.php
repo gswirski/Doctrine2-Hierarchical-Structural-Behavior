@@ -9,6 +9,19 @@ use DoctrineExtensions\Hierarchical\AbstractManager,
 
 class NestedSetManager extends AbstractManager implements NestedSetNodeInfo
 {
+     /**
+     * __construct
+     *
+     * @param Doctrine\ORM\EntityManager $em
+     * @param Doctrine\ORM\Mapping\ClassMetadata $meta
+     * @return void
+     */
+    public function __construct(EntityManager $em, ClassMetadata $meta)
+    {
+        parent::__construct($em, $meta);
+        $this->queryFactory = new NestedSetQueryFactory($this, $meta);
+    }
+
     /**
      * Decorates the entity with the appropriate Node decorator
      *

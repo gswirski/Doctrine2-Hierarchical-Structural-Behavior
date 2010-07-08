@@ -2,40 +2,8 @@
 
 namespace DoctrineExtensions\Hierarchical\MaterializedPath;
 
-use DoctrineExtensions\Hierarchical\AbstractDecorator,
-    DoctrineExtensions\Hierarchical\Node,
-    DoctrineExtensions\Hierarchical\HierarchicalException,
-    DoctrineExtensions\Hierarchical\MaterializedPath\MaterializedPathManager,
-    Doctrine\ORM\NoResultException,
-    Doctrine\ORM\Mapping\ClassMetadata;
-
-
-class MaterializedPathQueryFactory
+class MaterializedPathQueryFactory extends AbstractQueryFactory
 {
-    /**
-     * @var DoctrineExtensions\Hierarchical\MaterializedPath\MaterializedPathManager
-     */
-    protected $hm;
-
-    /**
-     * @var Doctrine\ORM\Mapping\ClassMetadata
-     */
-    protected $classMetadata;
-
-    /**
-     * ReadOnly prototype entity grabbed from ClassMetadata
-     *
-     * @var string
-     **/
-    protected $prototype;
-
-    public function __construct(MaterializedPathManager $hm, ClassMetadata $meta)
-    {
-        $this->hm = $hm;
-        $this->classMetadata = $meta;
-        $this->prototype = $meta->newInstance();
-    }
-
     /**
      * Returns a basic QueryBuilder which will select the entire table ordered by path
      *
@@ -44,10 +12,7 @@ class MaterializedPathQueryFactory
      */
     public function getBaseQueryBuilder()
     {
-        return $this->hm->getEntityManager()
-            ->createQueryBuilder()
-            ->select('e')
-            ->from($this->classMetadata->name, 'e')
+        return parent::getBaseQueryBuilder()
             ->orderBy('e.' . $this->prototype->getPathFieldName());
     }
 

@@ -117,7 +117,7 @@ class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
             throw new NoResultException;
         }
 
-        $qb = $this->_getBaseQueryBuilder();
+        $qb = $this->hm->getQueryFactory()->getBaseQueryBuilder();
         $expr = $qb->expr();
         $andX = $expr->andX();
         $rootId = $this->getValue($this->getRootIdFieldName()) ?: $this->getValue($this->getIdFieldName());
@@ -138,7 +138,7 @@ class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
             throw new NoResultException;
         }
 
-        $qb = $this->_getBaseQueryBuilder();
+        $qb = $this->hm->getQueryFactory()->getBaseQueryBuilder();
         $expr = $qb->expr();
         $andX = $expr->andX();
         $rootId = $this->getValue($this->getRootIdFieldName()) ?: $this->getValue($this->getIdFieldName());
@@ -169,7 +169,7 @@ class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
         if ( ! $this->hasChildren()) {
             return array();
         }
-        $qb = $this->_getBaseQueryBuilder();
+        $qb = $this->hm->getQueryFactory()->getBaseQueryBuilder();
         $expr = $qb->expr();
         $andX = $expr->andX();
         $rootId = $this->getValue($this->getRootIdFieldName()) ?: $this->getValue($this->getIdFieldName());
@@ -220,7 +220,7 @@ class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
             return null;
         }
 
-        //$qb = $this->_getBaseQueryBuilder();
+        //$qb = $this->hm->getQueryFactory()->getBaseQueryBuilder();
         //$qb->where($qb->expr()->eq('e.' . $this->getIdFieldName(), $this->getValue($this->getParentIdFieldName())));
 
         //$this->parent = $this->hm->getNode($qb->getQuery()->getSingleResult());
@@ -239,7 +239,7 @@ class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
             return array();
         }
 
-        $qb = $this->_getBaseQueryBuilder();
+        $qb = $this->hm->getQueryFactory()->getBaseQueryBuilder();
         $expr = $qb->expr();
         $andX = $expr->andX();
         $andX->add($expr->eq('e.' . $this->getRootIdFieldName(), $this->getValue($this->getRootIdFieldName())));
@@ -427,7 +427,7 @@ class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
     {
         $oldRoot = $this->getValue($this->getRootIdFieldName());
 
-        $qb = $this->_getBaseQueryBuilder();
+        $qb = $this->hm->getQueryFactory()->getBaseQueryBuilder();
         $expr = $qb->expr();
         $andX = $expr->andX();
         $andX->add($expr->eq('e.' . $this->getRootIdFieldName(), $this->getValue($this->getRootIdFieldName())));
@@ -442,13 +442,6 @@ class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
         $this->_shiftRLValues($first, 0, $delta, $oldRoot);
     }
 
-    protected function _getBaseQueryBuilder()
-    {
-        return $this->hm->getEntityManager()->createQueryBuilder()
-            ->select('e')
-            ->from($this->classMetadata->name, 'e');
-    }
-
     protected function _shiftRLValues($first, $last, $delta, $root)
     {
         $this->_updateLeftValues($first, $last, $delta, $root);
@@ -457,7 +450,7 @@ class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
 
     protected function _updateLeftValues($minLeft, $maxLeft, $delta, $rootId)
     {
-        $qb = $this->_getBaseQueryBuilder();
+        $qb = $this->hm->getQueryFactory()->getBaseQueryBuilder();
         $expr = $qb->expr();
         $andX = $expr->andX();
 
@@ -477,7 +470,7 @@ class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
 
     protected function _updateRightValues($minRight, $maxRight, $delta, $rootId)
     {
-        $qb = $this->_getBaseQueryBuilder();
+        $qb = $this->hm->getQueryFactory()->getBaseQueryBuilder();
         $expr = $qb->expr();
         $andX = $expr->andX();
 
@@ -497,7 +490,7 @@ class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
 
     protected function _updateLevelValues($left, $right, $delta, $rootId)
     {
-        $qb = $this->_getBaseQueryBuilder();
+        $qb = $this->hm->getQueryFactory()->getBaseQueryBuilder();
         $expr = $qb->expr();
         $andX = $expr->andX();
 
@@ -545,7 +538,7 @@ class NestedSetNodeDecorator extends AbstractDecorator implements NodeInterface
     /*
     public function getRootNodes($limit = null, $offset = 0, $order = 'ASC')
     {
-        $qb = $this->_getBaseQueryBuilder();
+        $qb = $this->hm->getQueryFactory()->getBaseQueryBuilder();
         $qb->where('e.' . $this->getRootIdFieldName() . ' IS NULL');
         $qb->orderBy('e.' . $this->getLeftFieldName(), $order);
         $q = $qb->getQuery();

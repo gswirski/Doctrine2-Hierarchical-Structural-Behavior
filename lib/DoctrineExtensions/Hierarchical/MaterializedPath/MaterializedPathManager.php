@@ -25,19 +25,9 @@ class MaterializedPathManager extends AbstractManager implements MaterializedPat
     public function __construct(EntityManager $em, ClassMetadata $meta)
     {
         parent::__construct($em, $meta);
-        $this->qbFactory = new MaterializedPathQueryFactory($this, $meta);
+        $this->queryFactory = new MaterializedPathQueryFactory($this, $meta);
     }
-
-    /**
-     * Returns the QueryBuilder factory
-     *
-     * @return MaterializedPathQueryFactory
-     **/
-    public function getQueryFactory()
-    {
-        return $this->qbFactory;
-    }
-
+    
     /**
      * Decorates the entity with the appropriate Node decorator
      *
@@ -108,7 +98,7 @@ class MaterializedPathManager extends AbstractManager implements MaterializedPat
      **/
     public function getRootNodes()
     {
-        return $this->getNodes($this->qbFactory
+        return $this->getNodes($this->queryFactory
             ->getRootNodeQueryBuilder()
             ->getQuery()
             ->getResult());
@@ -121,7 +111,7 @@ class MaterializedPathManager extends AbstractManager implements MaterializedPat
      **/
     public function getFirstRootNode()
     {
-        $qb = $this->_qbFactory
+        $qb = $this->_queryFactory
             ->getRootNodeQueryBuilder()
             ->setMaxResults(1);
         try {
@@ -138,7 +128,7 @@ class MaterializedPathManager extends AbstractManager implements MaterializedPat
      **/
     public function getLastRootNode()
     {
-        $qb = $this->qbFactory
+        $qb = $this->queryFactory
             ->getRootNodeQueryBuilder()
             ->orderBy('e.' . $this->getPathFieldName(), 'DESC')
             ->setMaxResults(1);
@@ -157,7 +147,7 @@ class MaterializedPathManager extends AbstractManager implements MaterializedPat
     public function delete($entity)
     {
         $node = $this->getNode($entity);
-        $qb = $this->qbFactory
+        $qb = $this->queryFactory
             ->getBaseQueryBuilder();
         $qb->where($qb->expr()->eq('e.' . $this->getIdFieldName(), $node->getId()));
         $this->deleteQuerySet($qb);
@@ -237,7 +227,7 @@ class MaterializedPathManager extends AbstractManager implements MaterializedPat
     public function findProblems()
     {
         $badChars = $badStepLength = $orphans = $wrongDepth = $wrongNumChildren = array();
-        $q = $this->qbFactory->getBaseQueryBuilder()->getQuery();
+        $q = $this->queryFactory->getBaseQueryBuilder()->getQuery();
         foreach ($q->getResult() as $node) {
             $bad = false;
             $node = $this->getNode($node);
@@ -266,7 +256,7 @@ class MaterializedPathManager extends AbstractManager implements MaterializedPat
                 continue;
             }
 
-            $qb = $this->qbFactory->getBaseQueryBuilder()->select('COUNT(e)');
+            $qb = $this->queryFactory->getBaseQueryBuilder()->select('COUNT(e)');
             $expr = $qb->expr();
             $andX = $expr->andX();
             $interval = PathHelper::getChildrenPathInterval($node, $node->getPath());
