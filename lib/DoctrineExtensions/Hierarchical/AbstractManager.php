@@ -126,24 +126,16 @@ abstract class AbstractManager
      * @param mixed $id
      * @return DoctrineExtensions\Hierarchical\Node
      */
-    abstract public function getRoot($id = null);
+    abstract public function fetchRoot($id = null);
     
     /**
      * Gets all root nodes
      *
      * @return Doctrine\Common\Collections\Collection
      */
-    abstract public function getRoots();
-    
-    /**
-     * Deletes tree by root id or default one if not specified
-     *
-     * @param mixed $root
-     */
-    abstract public function deleteTree($root = null);
-    
-    /**
-     * Deletes all trees
-     */
-    abstract public function deleteTrees();
+    abstract public function fetchRoots();
+
+    abstract function fetchTree($options, $hydrationMode = null);
+
+    abstract function fetchBranch($pk, $options, $hydrationMode = null);
 }

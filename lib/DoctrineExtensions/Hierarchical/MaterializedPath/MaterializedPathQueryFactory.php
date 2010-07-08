@@ -2,6 +2,8 @@
 
 namespace DoctrineExtensions\Hierarchical\MaterializedPath;
 
+use DoctrineExtensions\Hierarchical\AbstractQueryFactory;
+
 class MaterializedPathQueryFactory extends AbstractQueryFactory
 {
     /**

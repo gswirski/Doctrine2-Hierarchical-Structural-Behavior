@@ -33,9 +33,18 @@ interface NestedSetNodeInfo
     public function getLevelFieldName();
 
     /**
-     * Retrieves the Entity root_id field name
+     * Checks whether many trees can exist in one table
      *
-     * @return string
+     * @return bool
+     */
+    public function hasManyRoots();
+    
+    /**
+     * Retrieves the Entity root_id field name.
+     *
+     * If cannot have many roots - returns null
+     *
+     * @return mixed
      */
     public function getRootIdFieldName();
 }

@@ -2,8 +2,11 @@
 
 namespace DoctrineExtensions\Hierarchical\NestedSet;
 
-use DoctrineExtensions\Hierarchical\AbstractManager,
+use Doctrine\ORM\EntityManager,
+    Doctrine\ORM\Mapping\ClassMetadata,
+    DoctrineExtensions\Hierarchical\AbstractManager,
     DoctrineExtensions\Hierarchical\NodeInterface,
+    DoctrineExtensions\Hierarchical\HierarchicalException,
     DoctrineExtensions\Hierarchical\NestedSet\NestedSetNodeInfo,
     DoctrineExtensions\Hierarchical\NestedSet\NestedSetNodeDecorator;
 
@@ -48,24 +51,26 @@ class NestedSetManager extends AbstractManager implements NestedSetNodeInfo
      *
      * @param object $entity        instance of Doctrine_Record
      */
-    public function createRoot(NestedSetNodeInfo $entity)
+    public function createRoot($entity)
     {
         $node = $this->getNode($entity);
-        
+
         $this->em->getConnection()->beginTransaction();
         try {
             $node->setValue($this->getLeftFieldName(), 1);
             $node->setValue($this->getRightFieldName(), 2);
             $node->setValue($this->getLevelFieldName(), 0);
-            
-            if ( ! $node->getValue($this->getRootIdFieldName())) {
-                if ( ! $node->getId()) {
-                    throw new HierarchicalException('You cannot use default root id for non persisted entity');
+
+            if ($this->hasManyRoots()) {
+                if ( ! $node->getValue($this->getRootIdFieldName())) {
+                    if ( ! $node->getId()) {
+                        throw new HierarchicalException('You cannot use default root id for non persisted entity');
+                    }
+
+                    $node->setValue($this->getRootIdFieldName(), $node->getId());
                 }
-                
-                $node->setValue($this->getRootIdFieldName(), $node->getId());
             }
-            
+
             $this->em->persist($entity);
             $this->em->flush();
             $this->em->getConnection()->commit();
@@ -74,7 +79,7 @@ class NestedSetManager extends AbstractManager implements NestedSetNodeInfo
             $this->em->close();
             throw $e;
         }
-        
+
         return $node;
     }
 
@@ -84,35 +89,38 @@ class NestedSetManager extends AbstractManager implements NestedSetNodeInfo
      * @param mixed $id
      * @return DoctrineExtensions\Hierarchical\Node
      */
-    public function getRoot($id = null)
+    public function fetchRoot($id = null)
     {
-        
+        $queryBuilder = $this->getQueryFactory()->getRootNodeQueryBuilder();
+        if ($id) {
+            $queryBuilder->andWhere($queryBuilder->expr()->eq('e.' . $this->getRootIdFieldName(), $id));
+        }
+
+        try {
+            return $queryBuilder->getQuery()->setMaxResults(1)->getSingleResult();
+        } catch (\Exception $e) {
+            return false;
+        }
     }
-    
+
     /**
      * Gets all root nodes
      *
      * @return Doctrine\Common\Collections\Collection
      */
-    public function getRoots()
+    public function fetchRoots()
+    {
+        $queryBuilder = $this->getQueryFactory()->getRootNodeQueryBuilder();
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    public function fetchTree($options, $hydrationMode = null)
     {
         
     }
-    
-    /**
-     * Deletes tree by root id or default one if not specified
-     *
-     * @param mixed $root
-     */
-    public function deleteTree($root = null)
-    {
-        
-    }
-    
-    /**
-     * Deletes all trees
-     */
-    public function deleteTrees()
+
+    public function fetchBranch($pk, $options, $hydrationMode = null)
     {
         
     }
@@ -169,6 +177,11 @@ class NestedSetManager extends AbstractManager implements NestedSetNodeInfo
     public function getRootIdFieldName()
     {
         return $this->prototype->getRootIdFieldName();
+    }
+    
+    public function hasManyRoots()
+    {
+        return $this->prototype->hasManyRoots();
     }
 
     /**
