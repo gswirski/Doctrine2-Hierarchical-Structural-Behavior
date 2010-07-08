@@ -47,5 +47,5 @@ class AbstractDecorator
     {
         $this->classMetadata->reflFields[$fieldName]->setValue($this->entity, $value);
     }
-    // ...
+    
 }

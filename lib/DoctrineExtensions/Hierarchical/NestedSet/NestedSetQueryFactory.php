@@ -5,16 +5,10 @@ namespace DoctrineExtensions\Hierarchical\NestedSet;
 use DoctrineExtensions\Hierarchical\AbstractQueryFactory;
 
 class NestedSetQueryFactory extends AbstractQueryFactory
-{
-    /**
-     * Returns a basic QueryBuilder which will select the entire table ordered by path
-     *
-     * @param  $node
-     * @return void
-     */
-    public function getBaseQueryBuilder()
+{   
+    public function getSelectQueryBuilder()
     {
-        return parent::getBaseQueryBuilder()
+        return $this->getBaseQueryBuilder()
             ->orderBy('e.' . $this->prototype->getLeftFieldName());
     }
     
