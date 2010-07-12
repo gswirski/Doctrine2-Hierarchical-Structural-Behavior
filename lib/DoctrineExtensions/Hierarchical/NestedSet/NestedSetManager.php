@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManager,
     DoctrineExtensions\Hierarchical\NestedSet\NestedSetNodeInfo,
     DoctrineExtensions\Hierarchical\NestedSet\NestedSetNodeDecorator;
 
-class NestedSetManager extends AbstractManager implements NestedSetNodeInfo
+class NestedSetManager extends AbstractManager
 {
      /**
      * __construct

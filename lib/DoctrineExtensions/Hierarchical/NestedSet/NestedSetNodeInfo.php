@@ -47,4 +47,14 @@ interface NestedSetNodeInfo
      * @return mixed
      */
     public function getRootIdFieldName();
+    
+    public function addChild($child, $pos = null);
+    
+    public function getChild($index);
+    
+    public function getChildren();
+    
+    public function setParent($parent);
+    
+    public function getParent();
 }
